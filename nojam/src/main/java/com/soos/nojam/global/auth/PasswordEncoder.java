@@ -1,24 +1,29 @@
 package com.soos.nojam.global.auth;
 
+import io.micrometer.common.util.StringUtils;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
 import org.bouncycastle.crypto.params.Argon2Parameters;
 import org.bouncycastle.util.encoders.Hex;
+import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
+@Component
 public class PasswordEncoder {
 
-    private final int ITERATIONS = 10;
-    private final int MEMORY = 65536;
-    private final int PARALLELISM = 1;
-    private final int HASH_LENGTH = 64;
+    private static final int ITERATIONS = 10;
+    private static final int MEMORY = 65536;
+    private static final int PARALLELISM = 1;
+    private static final int HASH_LENGTH = 64;
     private final byte[] SALT;
 
     public PasswordEncoder(){
         this.SALT = generateSalt16Byte();
     }
+
     public String encodePassword(String password){
+        validateNotNull(password);
         Argon2Parameters.Builder builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
                 .withVersion(Argon2Parameters.ARGON2_VERSION_13)
                 .withSalt(SALT)
@@ -38,7 +43,6 @@ public class PasswordEncoder {
         return new String(Hex.encode(result));
     }
     public boolean verifyPassword(String password, String encodedPassword){
-        byte[] decodedPassword = Hex.decode(encodedPassword);
         String newEncodedPassword = encodePassword(password);
         return newEncodedPassword.equals(encodedPassword);
     }
@@ -48,5 +52,11 @@ public class PasswordEncoder {
         byte[] salt = new byte[16];
         secureRandom.nextBytes(salt);
         return salt;
+    }
+
+    private static void validateNotNull(final String value) {
+        if(StringUtils.isBlank(value)) {
+            throw new IllegalArgumentException("패스워드는 필수입니다.");
+        }
     }
 }
