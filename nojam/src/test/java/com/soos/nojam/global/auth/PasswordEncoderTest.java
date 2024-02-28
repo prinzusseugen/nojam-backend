@@ -1,7 +1,5 @@
 package com.soos.nojam.global.auth;
 
-import org.bouncycastle.util.encoders.Hex;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
