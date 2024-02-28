@@ -37,7 +37,11 @@ public class PasswordEncoder {
 
         return new String(Hex.encode(result));
     }
-
+    public boolean verifyPassword(String password, String encodedPassword){
+        byte[] decodedPassword = Hex.decode(encodedPassword);
+        String newEncodedPassword = encodePassword(password);
+        return newEncodedPassword.equals(encodedPassword);
+    }
 
     private byte[] generateSalt16Byte() {
         SecureRandom secureRandom = new SecureRandom();
