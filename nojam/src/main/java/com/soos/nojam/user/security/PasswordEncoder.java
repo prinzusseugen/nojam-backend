@@ -1,4 +1,4 @@
-package com.soos.nojam.global.auth;
+package com.soos.nojam.user.security;
 
 import io.micrometer.common.util.StringUtils;
 import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
@@ -18,11 +18,11 @@ public class PasswordEncoder {
     private static final int HASH_LENGTH = 64;
     private final byte[] SALT;
 
-    public PasswordEncoder(){
+    public PasswordEncoder() {
         this.SALT = generateSalt16Byte();
     }
 
-    public String encodePassword(String password){
+    public String encodePassword(String password) {
         validateNotNull(password);
         Argon2Parameters.Builder builder = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
                 .withVersion(Argon2Parameters.ARGON2_VERSION_13)
@@ -42,7 +42,8 @@ public class PasswordEncoder {
 
         return new String(Hex.encode(result));
     }
-    public boolean verifyPassword(String password, String encodedPassword){
+
+    public boolean verifyPassword(String password, String encodedPassword) {
         String newEncodedPassword = encodePassword(password);
         return newEncodedPassword.equals(encodedPassword);
     }
@@ -55,7 +56,7 @@ public class PasswordEncoder {
     }
 
     private static void validateNotNull(final String value) {
-        if(StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value)) {
             throw new IllegalArgumentException("패스워드는 필수입니다.");
         }
     }
