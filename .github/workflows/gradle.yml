@@ -28,6 +28,8 @@ jobs:
         java-version: '17'
         distribution: 'corretto'
     - name: Grant execute permission for gradlew
-      run: chmod +x nojam/gradlew
+      working-directory: ./nojam
+      run: chmod +x gradlew
     - name: Build with Gradle Wrapper
-      run: nojam/gradlew build
+      working-directory: ./nojam
+      run: ./gradlew clean build
