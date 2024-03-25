@@ -56,8 +56,9 @@ jobs:
         scp -i $GITHUB_WORKSPACE/private_key.pem -o StrictHostKeyChecking=yes build/libs/*.jar \
         ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/nojamServer.jar
         ssh -i $GITHUB_WORKSPACE/private_key.pem -o StrictHostKeyChecking=yes ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} \
-        "pgrep java | xargs kill -15 trelloServer.jar && nohup java -jar /home/${{ secrets.EC2_USERNAME }}/nojamServer.jar > /home/${{ secrets.EC2_USERNAME }}/app.log 2>&1 &"
+        "pgrep java | xargs kill -15 nojamServer.jar && nohup java -jar /home/${{ secrets.EC2_USERNAME }}/nojamServer.jar > /home/${{ secrets.EC2_USERNAME }}/app.log 2>&1 &"
         rm -f $GITHUB_WORKSPACE/private_key.pem
+
 
 
 
