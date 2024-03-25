@@ -51,7 +51,6 @@ jobs:
         fi
     - name: Deploy Jar file
       run: |
-        chmod +x bulid/libs/nojam-0.0.1-SNAPSHOT.jar
         sudo nohup java -jar build/libs/nojam-0.0.1-SNAPSHOT.jar -- spring.profiles.active=prod &
       
 
