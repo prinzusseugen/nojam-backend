@@ -40,13 +40,13 @@ jobs:
 
     steps:
     - run: |
-        if sudo lsof -i :80; then
-          echo "Port 80 is already in use. Killing process"
-          sudo lsof -i :80 | awk 'NR!=1 {print $2}' | sudo xargs kill -15
+        if sudo lsof -i :8080; then
+          echo "Port 8080 is already in use. Killing process"
+          sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -15
         fi
     - name: Deploy Jar file
       run: |
-        sudo java -jar bulid/libs/*.jar -- spring.profiles.active=prod &
+        sudo nohup java -jar bulid/libs/nojam-0.0.1-SNAPSHOT.jar -- spring.profiles.active=prod &
       
 
 
