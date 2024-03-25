@@ -40,6 +40,10 @@ jobs:
 
     steps:
     - run: |
+        chmod +x gradlew
+        ./gradlew bootjar
+    
+    - run: |
         if sudo lsof -i :8080; then
           echo "Port 8080 is already in use. Killing process"
           sudo lsof -i :8080 | awk 'NR!=1 {print $2}' | sudo xargs kill -15
