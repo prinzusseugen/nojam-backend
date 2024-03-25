@@ -51,12 +51,13 @@ jobs:
 
     - name: Deploy to EC2
       run: |
-        echo "${{ secrets.EC2_SSH_KEY }}" > $HOME/.ssh/private_key.pem
-        chmod 600 $HOME/.ssh/private_key.pem
-        scp -i $HOME/.ssh/private_key.pem -o StrictHostKeyChecking=yes build/libs/*.jar \
+        echo "${{ secrets.EC2_SSH_KEY }}" > $GITHUB_WORKSPACE/private_key.pem
+        chmod 600 $GITHUB_WORKSPACE/private_key.pem
+        scp -i $GITHUB_WORKSPACE/private_key.pem -o StrictHostKeyChecking=yes build/libs/*.jar \
         ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/nojamServer.jar
-        ssh -i $HOME/.ssh/private_key.pem -o StrictHostKeyChecking=yes ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} \
+        ssh -i $GITHUB_WORKSPACE/private_key.pem -o StrictHostKeyChecking=yes ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} \
         "pgrep java | xargs kill -15 trelloServer.jar && nohup java -jar /home/${{ secrets.EC2_USERNAME }}/nojamServer.jar > /home/${{ secrets.EC2_USERNAME }}/app.log 2>&1 &"
-        rm -f $HOME/.ssh/private_key.pem
+        rm -f $GITHUB_WORKSPACE/private_key.pem
+
 
 
