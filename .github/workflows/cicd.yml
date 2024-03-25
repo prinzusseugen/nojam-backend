@@ -1,0 +1,57 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
+
+name: Java CI/CD with Gradle
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'corretto'
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Build with Gradle Wrapper
+      run: ./gradlew clean build
+
+##  배포 스크립트
+  deploy:
+    needs: build
+    runs-on: self-hosted
+
+    steps:
+    - name: Change Permission
+      run: |
+        sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner/_work/nojam-backend
+    - run: |
+        if sudo lsof -i :80; then
+          echo "Port 80 is already in use. Killing process"
+          sudo lsof -i :80 | awk 'NR!=1 {print $2}' | sudo xargs kill -15
+        fi
+    - name: Deploy Jar file
+      run: |
+        sudo java -jar bulid/libs/*.jar -- spring.profiles.active=prod &
+      
+
+
+
+
