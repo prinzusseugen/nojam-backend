@@ -41,7 +41,7 @@ jobs:
     steps:
     - name: Change Permission
       run: |
-        sudo chown -R root|root /home/ubuntu/actions-runner/_work/nojam-backend
+        sudo chown -R root:root /home/ubuntu/actions-runner/_work/nojam-backend
     - run: |
         if sudo lsof -i :80; then
           echo "Port 80 is already in use. Killing process"
