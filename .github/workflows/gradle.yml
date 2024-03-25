@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Java CI/CD with Gradle
 
 on:
   push:
@@ -32,3 +32,29 @@ jobs:
 
     - name: Build with Gradle Wrapper
       run: ./gradlew clean build
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: build/libs/*.jar
+
+##  배포 스크립트
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v4
+      with:
+        path: build/libs/
+
+    - name: Deploy to EC2
+      run: |
+        echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/private_key.pem
+        chmod 600 ~/.ssh/private_key.pem
+        scp -i ~/.ssh/private_key.pem -o StrictHostKeyChecking=yes build/libs/*.jar \
+        ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }}:/home/${{ secrets.EC2_USERNAME }}/nojamServer.jar
+        ssh -i ~/.ssh/private_key.pem -o StrictHostKeyChecking=yes ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} \
+        "pgrep java | xargs kill -15 trelloServer.jar && nohup java -jar /home/${{ secrets.EC2_USERNAME }}/nojamServer.jar > /home/${{ secrets.EC2_USERNAME }}/app.log 2>&1 &"
+        rm -f ~/.ssh/private_key.pem
