@@ -53,10 +53,10 @@ jobs:
       run: |
         echo "${{ secrets.EC2_SSH_KEY }}" > $GITHUB_WORKSPACE/nojam.pem
         chmod 400 $GITHUB_WORKSPACE/nojam.pem
-        ssh-add $GITHUB_WORKSPACE/.ssh/private_key.pem
-        scp -i $GITHUB_WORKSPACE/nojam.pem -o StrictHostKeyChecking=no build/libs/*.jar \
+        ssh-add $GITHUB_WORKSPACE/.ssh/nojam.pem
+        scp -i $GITHUB_WORKSPACE/.ssh/private_key.pem -o StrictHostKeyChecking=no build/libs/*.jar \
         ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST_IP }}:/home/${{ secrets.EC2_USERNAME }}/nojamServer.jar
-        ssh -i $GITHUB_WORKSPACE/nojam.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST_IP }} \
+        ssh -i $GITHUB_WORKSPACE/.ssh/private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST_IP }} \
         "pgrep java | xargs kill -15 nojamServer.jar && nohup java -jar /home/${{ secrets.EC2_USERNAME }}/nojamServer.jar > /home/${{ secrets.EC2_USERNAME }}/app.log 2>&1 &"
         rm -f $GITHUB_WORKSPACE/nojam.pem
 
