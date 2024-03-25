@@ -52,7 +52,7 @@ jobs:
     - name: Deploy to EC2
       run: |
         echo "${{ secrets.EC2_SSH_KEY }}" > $GITHUB_WORKSPACE/nojam.pem
-        chmod 600 $GITHUB_WORKSPACE/nojam.pem
+        chmod 400 $GITHUB_WORKSPACE/nojam.pem
         scp -i $GITHUB_WORKSPACE/nojam.pem -o StrictHostKeyChecking=no build/libs/*.jar \
         ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST_IP }}:/home/${{ secrets.EC2_USERNAME }}/nojamServer.jar
         ssh -i $GITHUB_WORKSPACE/nojam.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST_IP }} \
