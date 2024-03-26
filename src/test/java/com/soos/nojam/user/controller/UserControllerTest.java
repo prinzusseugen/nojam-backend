@@ -152,7 +152,7 @@ class UserControllerTest {
         // when & then
         mockMvc.perform(patch(URI_USER + "/" + userId + "/introduction")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("introduction", introduction)
+                        .content(introduction)
                         .session(httpSession))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -163,7 +163,7 @@ class UserControllerTest {
         // when & then
         mockMvc.perform(patch(URI_USER + "/" + userId + "/introduction")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("introduction", introduction))
+                        .content(introduction))
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
     }
@@ -180,7 +180,7 @@ class UserControllerTest {
         // when & then
         mockMvc.perform(patch(URI_USER + "/" + userId + "/introduction")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .param("introduction", introduction)
+                        .content(introduction)
                         .session(httpSession))
                 .andExpect(status().isNotFound())
                 .andDo(print());
