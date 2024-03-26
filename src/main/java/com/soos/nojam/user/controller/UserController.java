@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserLoginRequest> login(
+    public ResponseEntity<UserResponseDto> login(
             HttpSession session,
             @RequestBody
             UserLoginRequest userLoginRequest) {
@@ -39,7 +39,7 @@ public class UserController {
         session.setAttribute("userId", userResponseDto.id());
         session.setMaxInactiveInterval(30000);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userLoginRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(userResponseDto);
     }
 
     @PostMapping("/sign-up")
@@ -57,7 +57,7 @@ public class UserController {
     @PatchMapping("/{userId}/introduction")
     public ResponseEntity<Void> updateUserIntroduction(
             @PathVariable Long userId,
-            @RequestParam String introduction,
+            @RequestBody String introduction,
             HttpSession session
     ) {
         Long loginUserId = (Long) session.getAttribute("userId");
