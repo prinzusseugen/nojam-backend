@@ -51,7 +51,7 @@ jobs:
         fi
     - name: Deploy Jar file
       run: |
-        sudo nohup java -jar build/libs/nojam-0.0.1-SNAPSHOT.jar > 1>~/app.log 2>~/error.log &
+        sudo nohup java -jar build/libs/nojam-0.0.1-SNAPSHOT.jar 1>~/app.log &
       
 
 
